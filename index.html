@@ -1,0 +1,712 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diez semanas para el estreno</title>
+<meta name="description" content="Actividad interactiva: eres escenógrafo de Cabaret y aprendes los conceptos de escenografía teatral mientras construyes tu maqueta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: taller en dos columnas. Izquierda: tu maqueta viva (fija en escritorio). Derecha: la escena actual (ficha para aprender + retos). Estética de Cabaret: club berlinés de 1929, terciopelo rojo, negro y dorado, con luz de lámparas de mesa. */
+:root{
+  color-scheme: dark;
+  --bg:#120709; --stage:#1c0b10; --panel:#251016; --line:#4a1e28;
+  --glow-1:rgba(220,40,60,.22); --glow-2:rgba(226,181,74,.12); --grid:rgba(255,220,200,.025);
+  --fg:#f8ede3; --muted:#d2baa9; --faint:#9a7d70;
+  --accent:#e8b84a; --accent-ink:#1a0e02; --gold:#e8b84a; --red:#e2364a;
+  --ok:#7cc59a; --bad:#e3796c;
+  --b1:#e2364a; --b2:#e8b84a; --b3:#5fc7b8; --b4:#e889b5; --b5:#8fb3ff;
+  --curtain:#7a1420; --curtain-2:#4e0c15; --wood:#4a3a2b; --wood-2:#5d4834; --frame:#8a6b3a;
+  --cal:#eee7d8; --tierra:#8a5a3a; --olivo:#6f7a3c; --sangre:#8e1f22;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg)}
+body{background:
+  radial-gradient(60vmax 40vmax at 100% 0%,var(--glow-1),transparent 60%),
+  radial-gradient(60vmax 45vmax at 0% 100%,var(--glow-2),transparent 60%),
+  repeating-linear-gradient(90deg,var(--grid) 0 14px,transparent 14px 32px),
+  var(--bg);background-attachment:fixed}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red));box-shadow:0 0 10px var(--red)}
+.intro h1 span,.brand span{text-shadow:0 0 18px color-mix(in srgb,var(--accent) 70%,transparent)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;line-height:1.02;letter-spacing:.01em;text-wrap:balance;margin:0}
+p{margin:0}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding-block:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--f-display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.steps{display:flex;gap:5px;flex:1 1 220px;min-width:0}
+.steps button{flex:1;min-width:0;height:8px;border-radius:99px;border:0;background:var(--line);padding:0}
+.steps button.done{background:var(--c)}
+.steps button.cur{outline:2px solid var(--fg);outline-offset:2px}
+.steps button:disabled{cursor:default}
+.tb-right{display:flex;gap:8px;align-items:center}
+.score{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:13.5px;border:1px solid var(--line);padding:6px 12px;border-radius:999px;background:var(--stage);white-space:nowrap}
+.score b{color:var(--accent)}
+.nb{background:var(--panel);border:1px solid var(--accent);color:var(--fg);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;white-space:nowrap}
+
+/* ---------- Intro ---------- */
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:center;padding-block:40px}
+@media (max-width:820px){.intro{grid-template-columns:1fr;gap:22px;padding-block:28px}}
+.intro h1{font-size:clamp(48px,9vw,96px);text-transform:uppercase}
+.intro h1 span{color:var(--accent)}
+.intro .lead{font-size:19px;color:var(--muted);max-width:46ch;margin-top:14px}
+.howto{display:grid;gap:10px;margin-top:20px;padding:0;list-style:none}
+.howto li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.howto li span{font-family:var(--f-mono);color:var(--accent)}
+.name{display:grid;gap:6px;margin-top:22px;max-width:380px}
+.name label{font-size:13px;color:var(--muted)}
+.name input{background:var(--stage);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.intro .go{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.credits{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--faint);display:grid;gap:4px}
+
+/* ---------- Workshop ---------- */
+.shop{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;align-items:start;padding-top:22px}
+@media (max-width:860px){.shop{grid-template-columns:1fr;gap:18px}}
+.model{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);display:grid;gap:10px}
+@media (max-width:860px){.model{position:static}}
+.model .box{background:var(--stage);border:1px solid var(--line);border-radius:14px;padding:10px}
+.model svg{display:block;width:100%;height:auto}
+.model h3{font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ficha-tec{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.ficha-tec li{display:grid;grid-template-columns:14px 1fr;gap:6px}
+.ficha-tec li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);margin-top:7px}
+@media (max-width:860px){.ficha-tec{display:none}}
+
+.scene-head{display:grid;gap:8px}
+.scene-head .eyebrow{color:var(--c)}
+.scene-head h2{font-size:clamp(38px,6vw,58px);text-transform:uppercase}
+.scene-head p{color:var(--muted);max-width:60ch;font-size:18px}
+.brief{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:14px 16px;font-size:16.5px}
+.brief b{color:var(--c)}
+
+.sec-label{margin-top:26px;margin-bottom:10px;display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.cards{grid-template-columns:1fr}}
+.cc{background:var(--stage);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:6px;align-content:start}
+.cc h4{margin:0;font-size:17px;color:var(--c)}
+.cc p{font-size:15.5px;color:var(--fg)}
+.cc .ex{font-size:14px;color:var(--muted);font-style:italic}
+.spectrum{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);border-top:2px solid var(--c);padding-top:6px}
+.readbtn{margin-top:14px;display:flex;justify-content:flex-end}
+
+.task{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;margin-top:12px}
+.task .q{font-size:19.5px;font-weight:700;line-height:1.35}
+.task .hint{font-size:14.5px;color:var(--muted)}
+.tag{justify-self:start;font-family:var(--f-mono);font-size:12px;color:var(--faint)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--stage);border:1px solid var(--line);border-radius:10px;padding:11px 14px;line-height:1.35}
+.opt:hover:not(:disabled){border-color:var(--muted)}
+.opt:disabled{cursor:default}
+.opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--stage))}
+.right{border-color:var(--ok)!important;background:color-mix(in srgb,var(--ok) 13%,var(--stage))!important}
+.wrong{border-color:var(--bad)!important;background:color-mix(in srgb,var(--bad) 13%,var(--stage))!important}
+.mrow{display:grid;gap:8px;background:var(--stage);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.mrow .it{display:flex;gap:10px;align-items:center;font-weight:700;line-height:1.35}
+.sw{width:26px;height:26px;border-radius:6px;flex:none;border:1px solid rgba(255,255,255,.2)}
+.num-badge{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:14px;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chipb{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14.5px}
+.chipb.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--panel))}
+.chipb:disabled{cursor:default}
+.mrow select{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px}
+.fix{font-size:14px;color:var(--muted)}
+.fix b{color:var(--ok)}
+.fb{border-left:3px solid var(--ok);padding:4px 0 4px 12px}
+.fb.no{border-left-color:var(--bad)}
+.fb b{display:block}
+.row-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;align-items:center}
+.counter{font-family:var(--f-mono);font-size:13px;color:var(--faint)}
+.inrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.inrow input{width:110px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:var(--f-mono)}
+.inrow .unit{font-family:var(--f-mono);color:var(--muted)}
+.inrow .btn{padding:9px 14px}
+.formula{font-family:var(--f-mono);font-size:14.5px;background:var(--stage);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:3px}
+.svgbox{background:var(--stage);border:1px solid var(--line);border-radius:12px;padding:6px}
+.svgbox svg{display:block;width:100%;height:auto}
+
+.unlock{margin-top:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 16%,var(--panel)),var(--panel));border:1px solid var(--c);border-radius:14px;padding:18px;display:grid;gap:12px}
+.unlock h3{font-size:26px;text-transform:uppercase}
+.unlock .chips span{background:var(--stage);border:1px solid var(--c);border-radius:999px;padding:4px 12px;font-size:14px}
+
+/* ---------- Notebook overlay ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(8,7,6,.72);display:flex;justify-content:flex-end}
+.drawer{width:min(520px,100%);height:100%;overflow-y:auto;background:var(--bg);border-left:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 30px);display:grid;gap:14px;align-content:start}
+.drawer header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.drawer h2{font-size:34px;text-transform:uppercase}
+.nb-group h3{font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:var(--c);margin-bottom:8px}
+.nb-list{display:grid;gap:6px}
+.nb-item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px}
+.nb-item b{display:block;color:var(--fg)}
+.nb-item.locked{color:var(--faint);border-style:dashed;background:transparent}
+
+/* ---------- Premiere ---------- */
+.premiere{padding-top:26px;display:grid;gap:22px}
+.theatre{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:var(--stage)}
+.theatre svg{display:block;width:100%;height:auto}
+.theatre .cl,.theatre .cr{position:absolute;top:0;bottom:0;width:50.5%;background:repeating-linear-gradient(90deg,var(--curtain-2) 0 18px,var(--curtain) 18px 36px);transition:transform 1.8s cubic-bezier(.6,.05,.3,1) .3s}
+.theatre .cl{left:0}.theatre .cr{right:0}
+.theatre.open .cl{transform:translateX(-96%)}.theatre.open .cr{transform:translateX(96%)}
+blockquote{margin:0;font-family:var(--f-display);font-weight:600;font-size:clamp(26px,4.4vw,40px);line-height:1.1;text-wrap:balance}
+blockquote cite{display:block;margin-top:8px;font-family:var(--f-body);font-size:15px;font-style:normal;color:var(--muted)}
+.ticket{background:var(--fg);color:#1d0b26;border-radius:16px;padding:24px;display:grid;gap:14px;
+  -webkit-mask:radial-gradient(circle 14px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 14px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 14px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 14px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.ticket .eyebrow{color:#9e1b2a}
+.ticket h2{font-size:clamp(32px,6vw,50px);text-transform:uppercase}
+.ticket table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px}
+.ticket td{padding:6px 0;border-bottom:1px dashed #b9ab93}
+.ticket td:last-child{text-align:right;font-family:var(--f-mono)}
+.ticket .total td{font-weight:700;border-bottom:0;font-size:18px}
+.ticket .who{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.ticket .stamp{justify-self:end;font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.08em;text-transform:uppercase;color:#9e1b2a;border:3px solid #9e1b2a;border-radius:8px;padding:2px 12px;transform:rotate(-4deg)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap" id="app"></div>
+<div id="ov"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= Conceptos del cuaderno ================= */
+const BLOCKS={1:{n:"¿Qué es la escenografía?",c:"var(--b1)"},2:{n:"Tipos de escenografía",c:"var(--b2)"},3:{n:"Elementos de la escenografía",c:"var(--b3)"},4:{n:"El escenógrafo y su proceso",c:"var(--b4)"},5:{n:"Dibujo escénico y técnica",c:"var(--b5)"}};
+const C={
+  esc:{b:1,t:"Escenografía",d:"El espacio escénico recreado según la lectura que dirección hace del texto. No es decorar el fondo: es construir el mundo de la obra."},
+  origen:{b:1,t:"Origen del término",d:"Pintura de escenas y dibujo arquitectónico en perspectiva. Por siglos fue una imagen pintada vista de frente."},
+  kin:{b:1,t:"De mirar a habitar",d:"En el siglo XX pasa de estática y pictórica a dinámica y kinestésica: se sube, se recorre, se toca."},
+  hab:{b:1,t:"Habitabilidad (João Mendes Ribeiro)",d:"Crear espacios con los que los cuerpos de quienes actúan puedan interactuar. Se piensa en 3D, como arquitectura."},
+  svo:{b:1,t:"Josef Svoboda",d:"«La verdadera escenografía es lo que sucede cuando se abre el telón». Se juzga en la función, no en el boceto."},
+  fun:{b:1,t:"Cuatro funciones",d:"Sitúa (dónde y cuándo), comunica (tono y emoción), resuelve (entradas, salidas, cambios, seguridad) y transforma (cambia con la historia)."},
+  desg:{b:4,t:"Desglose",d:"Lista de todo lo que pide la obra: lugares, momento del día, entradas y salidas, objetos, cambios y acotaciones. Se lee como lector y luego como técnico."},
+  junta:{b:4,t:"Junta con dirección",d:"Dirección da ideas abstractas; el escenógrafo pregunta y lleva referencias. Propone, pero después de entender."},
+  trad:{b:4,t:"Traducir una idea",d:"Una palabra abstracta se vuelve decisiones concretas de proporción, color y circulación (aire)."},
+  idoc:{b:4,t:"Investigación documental",d:"Cómo era ese mundo: arquitectura, texturas, luz, pintura de la época."},
+  iemo:{b:4,t:"Investigación emocional",d:"Imágenes no literales que transmiten el concepto. Ver otros montajes sirve, pero si solo partes de ahí terminas copiando."},
+  paleta:{b:4,t:"Paleta con razones",d:"Cada color se justifica desde la obra. Si no hay razón, no va."},
+  t_real:{b:2,t:"Realista",d:"Fiel, literal y llena de detalles: el público reconoce el lugar de inmediato."},
+  t_nat:{b:2,t:"Naturalista",d:"Actuación y espacio parecen la vida misma, tras una cuarta pared invisible."},
+  t_pint:{b:2,t:"Pintada",d:"Telones y paneles pintados de frente al público; se sustituyen entre escenas."},
+  t_rom:{b:2,t:"Romántica",d:"Atmósfera lúgubre y tenebrosa del Romanticismo (1790–1830): ruinas, noche, luna."},
+  t_fun:{b:2,t:"Funcional",d:"Al servicio de los movimientos: plataformas, escaleras y rampas que crean niveles."},
+  t_sug:{b:2,t:"Sugerente",d:"Uno o pocos objetos cargados de sentido; el público completa el resto."},
+  t_min:{b:2,t:"Minimalista",d:"Lo estrictamente indispensable. Exige más a los actores."},
+  t_abs:{b:2,t:"Abstracta",d:"Formas, color y luz sin lugar ni tiempo: sugiere sensaciones."},
+  deco:{b:3,t:"Decorado",d:"Todo lo que forma el espacio: fijo (muros, techo, columnas) y móvil (telones, carros, proyecciones)."},
+  util:{b:3,t:"Utilería",d:"Objetos que el actor toca y usa. Literal (una pluma para escribir) o simbólica (un reloj detenido)."},
+  ilum:{b:3,t:"Iluminación",d:"Crea atmósfera, destaca objetos o personajes y guía la mirada. Una luz muy tenue puede sugerir la muerte."},
+  vest:{b:3,t:"Vestuario y maquillaje",d:"Muestran quién es el personaje y cómo cambia."},
+  arte:{b:3,t:"Arte escénico",d:"Pintura y texturas: trampantojo (profundidad pintada sobre lo plano) y mapping (proyectar sobre superficies)."},
+  tecn:{b:3,t:"Piezas técnicas",d:"Tramoya (mueve cambios y efectos), soportes (peso), plataformas (niveles), tarimas (elevan el piso), carros (ruedas), bastidores (marcos forrados)."},
+  bast:{b:3,t:"Bastidor: dos usos",d:"La pieza (marco forrado que forma muros) y el lugar oculto donde se preparan los actores: «entre bastidores»."},
+  boceto:{b:4,t:"Boceto",d:"A mano alzada; explora atmósfera, composición y medidas aproximadas."},
+  maq:{b:4,t:"Maqueta",d:"El escenario en 3D, siempre con una figura humana a escala. Escalas comunes: 1:25 y 1:50."},
+  presu:{b:4,t:"Presupuesto",d:"Conserva el elemento que sostiene el concepto, simplifica lo demás y reutiliza lo de bodega."},
+  planos:{b:5,t:"Juego de planos",d:"Planta básica, plano compuesto, sección y alzados frontales. Si no está en el plano, no existe."},
+  italiana:{b:5,t:"Teatro a la italiana",d:"Vara, tramoya, bambalina, pierna, embocadura, ciclorama, hombro, proscenio y foso."},
+  ensayo:{b:4,t:"Ensayo técnico",d:"El diseño se enfrenta a la realidad: se ajustan tiempos de cambio, luz y seguridad con todo el equipo."},
+  decis:{b:4,t:"Decisiones externas e internas",d:"Externas: lo que ve el público. Internas: el espacio entre bastidores para que actores y tramoyistas trabajen."},
+  consid:{b:4,t:"El escenógrafo también considera",d:"Bloqueo, pirotecnia, trampillas, grandes conjuntos y baile."},
+  config:{b:5,t:"Tamaño y forma del espacio",d:"Proscenio (de frente), empuje (tres frentes), arena (cuatro frentes) y espacios no convencionales."},
+  rider:{b:4,t:"Rider técnico",d:"Describe medidas, varas, piso y carga de cada teatro. Por eso los diseños de gira suelen ser modulares."},
+  efectos:{b:5,t:"Efectos especiales",d:"Trampillas, ascensores, proyecciones o pirotecnia: todo efecto pide seguridad y cabe en presupuesto y técnica."}
+};
+const C_TOTAL=Object.keys(C).length;
+
+/* ================= Escenas ================= */
+const TYPES8=["Realista","Naturalista","Pintada","Romántica","Funcional","Sugerente","Minimalista","Abstracta"];
+const ANAT=["Bambalina","Ciclorama","Embocadura","Foso","Hombro","Pierna","Proscenio","Tramoya","Vara"];
+
+const SC=[
+ {id:"e1",b:1,week:"Semana 0",title:"Antes de abrir el telón",sub:"Te acaban de contratar. Antes de diseñar, necesitas saber qué es (y qué no es) la escenografía.",
+  brief:"<b>El encargo:</b> una compañía hará un nuevo montaje de <i>Cabaret</i> (música de John Kander, letras de Fred Ebb, libreto de Joe Masteroff; Broadway, 1966). La obra ocurre en Berlín entre 1929 y 1930, mientras crece el nazismo. Tú diseñas la escenografía y el estreno es en diez semanas.",
+  learn:["esc","origen","kin","hab","svo","fun"],
+  tasks:[
+   {id:"e1a",type:"match",q:"El espacio habla primero. Así está el escenario vacío del ensayo. ¿Qué comunica cada elemento?",hint:"Nada está en escena por casualidad.",opts:["Encierro","Aislamiento","Amenaza o expectativa","Ausencia"],
+    items:[{t:"Un muro alto sin ventanas",a:"Encierro"},{t:"Una luz cenital sobre un solo punto",a:"Aislamiento"},{t:"Una sola puerta, cerrada",a:"Amenaza o expectativa",e:"¿Quién entrará?"},{t:"Una silla rota",a:"Ausencia",e:"Algo pasó."}]},
+   {id:"e1b",type:"match",q:"¿Qué función de la escenografía cumple cada decisión en tu Cabaret?",opts:["Sitúa","Comunica","Resuelve","Transforma"],
+    items:[{t:"Lámparas de mesa, cortinas de terciopelo y carteles en alemán: sin palabras sabemos que es un club de Berlín en 1929",a:"Sitúa"},{t:"El club cálido y brillante al inicio; frío y duro cuando avanza el nazismo",a:"Comunica"},{t:"Rutas libres para pasar del club a la pensión sin detener la obra",a:"Resuelve"},{t:"El mismo Kit Kat Klub que al inicio es fiesta, al final se vuelve amenazante",a:"Transforma"}]},
+   {id:"e1c",type:"mc",q:"Un compañero te enseña un render precioso y dice «ya está lista la escenografía». Según Svoboda, ¿cuándo sabremos si funciona?",o:["Cuando la apruebe dirección","Cuando se abra el telón, con actores, luz y público","Cuando esté impresa en gran formato"],a:1,e:"La verdadera escenografía es lo que sucede cuando se abre el telón y no puede juzgarse de otra manera."}
+  ],ficha:"Encargo: Cabaret, estreno en 10 semanas"},
+
+ {id:"e2",b:4,week:"Semana 1",title:"El desglose",sub:"Todo empieza con una lectura atenta del guion.",
+  brief:"Cliff, un escritor estadounidense, llega a Berlín y renta un cuarto en la pensión de Fräulein Schneider. Ahí conoce a Sally Bowles, cantante del Kit Kat Klub, donde el Emcee comenta todo lo que pasa. Fräulein Schneider se compromete con Herr Schultz, un frutero judío. Lees la obra primero como lector y luego como técnico.",
+  learn:["desg"],
+  tasks:[
+   {id:"e2a",type:"multi",q:"¿Cuáles de estos lugares pide la obra?",hint:"Elige cuatro.",o:["El Kit Kat Klub","Una playa","La pensión de Fräulein Schneider","Un castillo medieval","La frutería de Herr Schultz","Una selva","El tren a Berlín","Un barco"],a:[0,2,4,6],e:"La obra alterna entre el club y la vida real de los personajes, y la escenografía tiene que moverse entre los dos."},
+   {id:"e2b",type:"match",q:"Completa tu desglose: ¿qué necesita cada momento?",opts:["Un vagón de tren que llega a la ciudad","Escenario del club con piso libre para cantar y bailar","Un objeto pequeño que se vea desde lejos","Muchos invitados en la frutería","Una ventana que se rompe en escena"],
+    items:[{t:"Inicio: Cliff viaja a Berlín",a:"Un vagón de tren que llega a la ciudad"},{t:"Los números del Emcee y de Sally",a:"Escenario del club con piso libre para cantar y bailar"},{t:"Herr Schultz le regala una piña a Fräulein Schneider",a:"Un objeto pequeño que se vea desde lejos"},{t:"La fiesta de compromiso",a:"Muchos invitados en la frutería",e:"Ahí Ernst muestra su brazalete nazi."},{t:"Después de la fiesta",a:"Una ventana que se rompe en escena",e:"Alguien lanza un ladrillo contra la frutería de Herr Schultz."}]}
+  ],ficha:"Desglose: club, pensión, frutería y tren"},
+
+ {id:"e3",b:4,week:"Semana 2",title:"Junta con dirección",sub:"El director llega con una idea abstracta. Tu trabajo es entenderla y traducirla.",
+  brief:"El director dice: <b>«Quiero que el público sienta que está dentro del Kit Kat Klub… y que no puede salir».</b>",
+  learn:["junta","trad"],
+  tasks:[
+   {id:"e3a",type:"mc",q:"¿Qué haces primero?",o:["Presento de inmediato un diseño completo","Pregunto: ¿dentro desde cuándo?, ¿el público participa?, ¿en qué escenas se siente el encierro?, y llevo referencias visuales","Espero a que me dé instrucciones concretas"],a:1,e:"Error común: esperar instrucciones concretas. El escenógrafo propone, pero después de entender."},
+   {id:"e3b",type:"match",q:"Traduce «dentro del club y sin salida» en tres decisiones.",hint:"Tu maqueta mostrará lo que decidas bien.",
+    items:[{t:"Proporción",a:"Mesas de cabaret para parte del público, dentro del club",opts:["Escenario lejano, todo detrás del marco","Mesas de cabaret para parte del público, dentro del club","Un club diminuto al fondo"]},
+           {t:"Color",a:"Rojo, negro y dorado: un brillo de fiesta que se vuelve amenaza",opts:["Pastel alegre","Rojo, negro y dorado: un brillo de fiesta que se vuelve amenaza","Blanco de hospital"]},
+           {t:"Aire (circulación)",a:"Una sola entrada visible, como la puerta de un club",opts:["Salidas por todos lados","Una sola entrada visible, como la puerta de un club","Sin puertas"]}]}
+  ],ficha:"Concepto: el público dentro del club, con una sola entrada"},
+
+ {id:"e4",b:4,week:"Semanas 3 y 4",title:"Investigación y paleta",sub:"Dos tipos de investigación. De ellas sale tu paleta.",
+  brief:"Tu mesa está llena de imágenes. Sepáralas y decide la paleta de la obra.",
+  learn:["idoc","iemo","paleta"],
+  tasks:[
+   {id:"e4a",type:"match",q:"¿Qué tipo de investigación es cada imagen?",opts:["Documental","Emocional"],
+    items:[{t:"Fotos de cabarets de Berlín de finales de los años 20",a:"Documental"},{t:"Una fiesta vista a través de un vidrio estrellado",a:"Emocional",e:"No es literal: la fiesta que se rompe."},{t:"Carteles y tipografía de la Alemania de esos años",a:"Documental"},{t:"Una sonrisa muy maquillada en penumbra",a:"Emocional"},{t:"El espejo gigante de Boris Aronson en el montaje original de 1966",a:"Documental",e:"Reflejaba al público. Ver otros montajes sirve para saber qué se ha hecho; si solo partes de ahí, terminas copiando."},{t:"Una puerta que se cierra con llave desde afuera",a:"Emocional"}]},
+   {id:"e4b",type:"match",q:"Cada color tiene una razón. ¿Cuál?",opts:["El deseo y la fiesta del club","La noche y la amenaza que crece","El brillo falso del espectáculo","El amor tierno de Schneider y Schultz"],
+    items:[{t:"Rojo cabaret",sw:"#9e1b2a",a:"El deseo y la fiesta del club"},{t:"Negro",sw:"#0c0a0b",a:"La noche y la amenaza que crece"},{t:"Dorado",sw:"#c9a44a",a:"El brillo falso del espectáculo"},{t:"Amarillo piña",sw:"#e8c547",a:"El amor tierno de Schneider y Schultz",e:"Por la piña que él le regala."}]}
+  ],ficha:"Paleta: rojo cabaret, negro, dorado y amarillo piña"},
+
+ {id:"e5",b:2,week:"Semana 4",title:"¿Qué tipo de escenografía?",sub:"Ocho maneras de construir el mundo de una obra, de imitar un lugar a transmitir una idea.",
+  brief:"El equipo propone ideas muy distintas para el club y la pensión. Nombra el tipo de cada propuesta.",
+  learn:["t_real","t_nat","t_pint","t_rom","t_fun","t_sug","t_min","t_abs"],spectrum:true,
+  tasks:[
+   {id:"e5a",type:"match",q:"¿Qué tipo es cada propuesta?",hint:"Los tipos no son cajones cerrados, pero cada propuesta tiene un rasgo dominante.",opts:TYPES8,
+    items:[{t:"La pensión con cama, ropero, lavabo, cortinas y maletas: el público reconoce el cuarto de Cliff",a:"Realista"},
+           {t:"Una superficie roja inclinada con anillos de luz, sin lugar ni época",a:"Abstracta"},
+           {t:"Solo una piña bajo un cenital",a:"Sugerente",e:"El amor de Schneider y Schultz… y lo frágil que es."},
+           {t:"Escaleras y una plataforma alta para que la banda y el Emcee estén arriba",a:"Funcional"},
+           {t:"Cliff y Sally discuten en la pensión como si no hubiera público, tras una cuarta pared",a:"Naturalista"},
+           {t:"Un telón con una calle de Berlín pintada en perspectiva",a:"Pintada"},
+           {t:"Ruinas, noche, luna y niebla dramática",a:"Romántica"},
+           {t:"Solo una silla de madera: todo depende de la actuación, la música y la luz",a:"Minimalista",e:"La sugerente elige un objeto cargado de sentido; la minimalista reduce todo al mínimo."}]}
+  ],ficha:"Un acento sugerente: la piña bajo un cenital"},
+
+ {id:"e6",b:3,week:"Semana 5",title:"Los elementos",sub:"Cinco elementos construyen un solo mundo. Debajo, la parte técnica que lo sostiene.",
+  brief:"Llega la lista de compras del montaje. Ordénala por elemento.",
+  learn:["deco","util","ilum","vest","arte","tecn","bast"],
+  tasks:[
+   {id:"e6a",type:"match",q:"¿A qué elemento pertenece cada cosa?",opts:["Decorado","Utilería","Iluminación","Vestuario y maquillaje","Arte escénico"],
+    items:[{t:"Paredes y cortinas del Kit Kat Klub",a:"Decorado"},{t:"La piña de Herr Schultz",a:"Utilería"},{t:"Un seguidor (luz de cañón) sobre el Emcee",a:"Iluminación"},{t:"El vestido de Sally y el maquillaje del Emcee",a:"Vestuario y maquillaje"},{t:"Ladrillos pintados sobre un panel plano",a:"Arte escénico",e:"Trampantojo: profundidad pintada donde no la hay."},{t:"Luz fría y dura en la última escena",a:"Iluminación"},{t:"La ventana de la frutería",a:"Decorado"}]},
+   {id:"e6b",type:"mc",q:"En tu propuesta, la piña se queda en escena después de que el compromiso se rompe, cada vez más marchita. Más que una fruta, representa ese amor que no pudo ser. ¿Qué tipo de utilería es?",o:["Literal","Simbólica","Técnica"],a:1,e:"Representa algo más que su uso. Una pluma para escribir sería utilería literal."},
+   {id:"e6c",type:"match",q:"Y la parte técnica: ¿qué hace cada pieza?",opts:["Mueve los cambios y efectos","Aguantan el peso","Crean niveles","Elevan el piso","Escenografía con ruedas","Marcos forrados que forman muros"],
+    items:[{t:"Tramoya",a:"Mueve los cambios y efectos"},{t:"Carros",a:"Escenografía con ruedas",e:"Por ejemplo, la cama de la pensión sobre un carro para entrar y salir del club."},{t:"Soportes",a:"Aguantan el peso"},{t:"Bastidores",a:"Marcos forrados que forman muros"},{t:"Plataformas",a:"Crean niveles"},{t:"Tarimas",a:"Elevan el piso"}]}
+  ],ficha:"Piña simbólica · la cama de la pensión sobre un carro"},
+
+ {id:"e7",b:4,week:"Semana 6",title:"Boceto y maqueta",sub:"Del boceto a mano alzada a la maqueta a escala, siempre con una figura humana.",
+  brief:"Tu maqueta va a escala <b>1:25</b>: 1 cm en la maqueta son 25 cm reales.",
+  learn:["boceto","maq"],
+  tasks:[
+   {id:"e7a",type:"num",q:"Calcula las medidas de tu maqueta.",formula:["medida real en cm ÷ 25 = medida en maqueta","a 1:50 se divide entre 50"],
+    items:[{q:"La puerta del club mide 2 m. ¿Cuánto mide en la maqueta?",a:8,u:"cm",e:"200 ÷ 25 = 8 cm."},
+           {q:"La actriz que hace de Sally mide 1.60 m. ¿Cuánto mide su figura?",a:6.4,u:"cm",e:"160 ÷ 25 = 6.4 cm."},
+           {q:"Cada mesa de cabaret mide 75 cm de alto. ¿Cuánto mide en la maqueta?",a:3,u:"cm",e:"75 ÷ 25 = 3 cm. Junto a la figura de 6.4 cm ves si el público sentado alcanza a ver el escenario."},
+           {q:"La productora pide una maqueta chica a 1:50. ¿Cuánto mide la puerta?",a:4,u:"cm",e:"200 ÷ 50 = 4 cm."}]}
+  ],ficha:"Maqueta 1:25 con figura humana · mesas de 3 cm"},
+
+ {id:"e8",b:5,week:"Semanas 7 y 8",title:"Presupuesto y planos",sub:"El diseño tiene que caber en el dinero y llegar al taller sin que nadie adivine.",
+  brief:"<b>Mala noticia:</b> producción recorta 40% del presupuesto. Tu diseño tiene un club con 20 mesas reales, un gran letrero luminoso y una pasarela.",
+  learn:["presu","planos"],
+  tasks:[
+   {id:"e8a",type:"mc",q:"¿Qué haces con el recorte?",o:["Cambio todo por telones negros","Conservo el club con mesas para el público y simplifico lo demás (menos mesas, letrero más pequeño)","Pido que le recorten a vestuario"],a:1,e:"Un buen diseño tiene una idea central. Telones negros abandona el concepto; pedir recortes a otra área rompe la colaboración."},
+   {id:"e8b",type:"match",q:"Preparas el juego de planos para el taller. ¿Qué muestra cada uno?",opts:["Los elementos fijos","Los móviles: en escena y guardados","Un corte con todos los elementos","Cada elemento, de frente"],
+    items:[{t:"Planta básica",a:"Los elementos fijos"},{t:"Plano compuesto",a:"Los móviles: en escena y guardados",e:"Por ejemplo, dónde se guarda la cama de la pensión cuando estamos en el club."},{t:"Sección",a:"Un corte con todos los elementos"},{t:"Alzados frontales",a:"Cada elemento, de frente"}]}
+  ],ficha:"Recorte 40%: se queda el club con mesas; planos al taller"},
+
+ {id:"e9",b:5,week:"Semana 9",title:"El teatro por dentro",sub:"Llegas al teatro para el montaje. Tienes que hablar el idioma de tramoya.",
+  brief:"El jefe de tramoya te pregunta dónde va cada cosa. Nombra las partes del teatro a la italiana.",
+  learn:["italiana"],
+  tasks:[
+   {id:"e9a",type:"match",svg:true,q:"Nombra cada número.",hint:"Las líneas punteadas marcan lo que el público no ve.",opts:ANAT,
+    items:[{t:"1",a:"Vara",e:"Tubo del que cuelgan luces, telones y escenografía."},{t:"2",a:"Tramoya",e:"Maquinaria que mueve todo."},{t:"3",a:"Bambalina",e:"Tela que oculta el techo."},{t:"4",a:"Pierna",e:"Tela lateral que oculta los hombros."},{t:"5",a:"Embocadura",e:"El marco del escenario."},{t:"6",a:"Ciclorama",e:"Fondo que se ilumina."},{t:"7",a:"Hombro",e:"Espacio lateral fuera de vista."},{t:"8",a:"Proscenio",e:"La parte más cercana al público."},{t:"9",a:"Foso",e:"Bajo el escenario, con trampillas."}]}
+  ],ficha:"Montaje en teatro a la italiana"},
+
+ {id:"e10",b:4,week:"Semana 10",title:"Ensayo técnico y gira",sub:"El diseño se enfrenta a la realidad. Y luego, a otros teatros.",
+  brief:"Primer ensayo técnico: <b>pasar del club a la pensión tarda 3 minutos</b>. La meta eran 40 segundos.",
+  learn:["ensayo","decis","consid","config","rider","efectos"],
+  tasks:[
+   {id:"e10a",type:"mc",q:"¿Qué propones al equipo?",o:["Que el público espere a oscuras","La cama y el ropero sobre carros con ruedas y un cambio coreografiado con tramoya","Quitar las escenas de la pensión"],a:1,e:"Se resuelve en equipo con dirección técnica, tramoya e iluminación."},
+   {id:"e10b",type:"mc",q:"Un bailarín se resbala en el piso brillante del club. ¿Qué haces?",o:["Le pido que baile más despacio","Cambio el acabado por uno antiderrapante y lo pruebo con el calzado real","Quito el número de baile"],a:1,e:"La seguridad de quienes actúan va primero, sin perder el concepto."},
+   {id:"e10c",type:"mc",q:"Los bailarines se cambian de vestuario rápido detrás del club. Crear ese espacio es una decisión…",o:["Externa","Interna","Presupuestal"],a:1,e:"Externas: lo que ve el público. Internas: lo que permite trabajar detrás."},
+   {id:"e10d",type:"match",q:"¿Qué consideración pide cada momento de tu montaje?",opts:["Grandes conjuntos","Trampillas","Bloqueo","Pirotecnia","Baile"],
+    items:[{t:"Todo el elenco del club en el número final",a:"Grandes conjuntos"},{t:"Propones que el Emcee aparezca de golpe desde abajo del escenario",a:"Trampillas"},{t:"Trazar por dónde se mueve cada actor",a:"Bloqueo"},{t:"Velas encendidas en las mesas del club",a:"Pirotecnia",e:"Todo fuego en escena pide medidas de seguridad."},{t:"Las coreografías del club",a:"Baile",e:"Piso libre, firme y seguro."}]},
+   {id:"e10e",type:"match",q:"¡Hay gira! Pides el rider técnico de cada sede. ¿Cómo adaptas el diseño?",opts:["Nada alto: se diseña en el piso, lo bajo y lo que cuelga","Lo alto solo al fondo; laterales bajos o transparentes","El marco oculta los cambios con varas, piernas y hombros","La arquitectura ya existe; cuidar electricidad, evacuación y aforo"],
+    items:[{t:"Arena (público alrededor)",a:"Nada alto: se diseña en el piso, lo bajo y lo que cuelga",e:"El montaje de Broadway de 2024 se presentó así, en formato circular."},{t:"Empuje (tres frentes)",a:"Lo alto solo al fondo; laterales bajos o transparentes"},{t:"Proscenio o a la italiana",a:"El marco oculta los cambios con varas, piernas y hombros"},{t:"Un bar o club real (no convencional)",a:"La arquitectura ya existe; cuidar electricidad, evacuación y aforo"}]}
+  ],ficha:"Cambio club–pensión en 40 s · diseño modular para gira"}
+];
+SC.forEach(s=>s.tasks.forEach(t=>t.pts=t.type==="mc"||t.type==="multi"?1:t.items.length));
+const TOTAL=SC.reduce((s,e)=>s+e.tasks.reduce((a,t)=>a+t.pts,0),0);
+
+/* ================= Configuración =================
+   ENVIO_URL: pega aquí la URL de tu Apps Script (termina en /exec) para recibir
+   los resultados en Google Sheets. Si se queda vacía, no se envía nada.
+   Solo funciona cuando el archivo está en Moodle o GitHub Pages. */
+const ENVIO_URL = "";
+const GRUPO = "DVUE";
+const STORE_KEY = "diez-semanas-cabaret-v1";
+
+/* ================= Estado ================= */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function fresh(){const ord={};SC.forEach(s=>s.tasks.forEach(t=>{if(t.type==="mc")ord[t.id]=shuffle(t.o.map((_,k)=>k));if(t.type==="match"&&!t.svg)ord[t.id]=shuffle(t.items.map((_,k)=>k));}));
+  return {view:"intro",cur:0,name:"",codigo:"",read:{},T:{},ord,nb:false,sent:{}};}
+function loadSaved(){try{const raw=localStorage.getItem(STORE_KEY);if(!raw)return null;const o=JSON.parse(raw);return (o&&o.T&&o.ord)?Object.assign(fresh(),o,{nb:false,view:"intro"}):null;}catch(e){return null;}}
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(S));}catch(e){}}
+let S=(window.claude&&window.claude.hot&&window.claude.hot.data&&window.claude.hot.data.S)||loadSaved()||fresh();
+const RESUMED=!!loadSaved()&&Object.keys(S.T).length>0;
+/* Código de avance: para llevar el progreso a otro dispositivo */
+function exportCode(){const o=Object.assign({},S,{nb:false});return btoa(unescape(encodeURIComponent(JSON.stringify(o))));}
+function importCode(c){try{const o=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(!o||!o.T||!o.ord)return false;S=Object.assign(fresh(),o,{nb:false});save();return true;}catch(e){return false;}}
+/* Envío a Google Sheets (una vez por escena) */
+function sendScene(i){
+  if(!ENVIO_URL)return; const sc=SC[i]; if(S.sent[sc.id])return;
+  const resp={}; sc.tasks.forEach(t=>{const st=S.T[t.id];if(st)resp[t.id]=t.type==="mc"?(st.ans.v!==undefined?t.o[st.ans.v]:""):t.type==="multi"?(st.ans.sel||[]).map(k=>t.o[k]):t.type==="num"?t.items.map((_,k)=>st.res[k]?st.res[k].v:""):t.items.map((_,k)=>st.ans[k]||"");});
+  const payload={grupo:GRUPO,nombre:S.name.trim(),codigo:S.codigo.trim(),escena:i+1,titulo:sc.title,puntos:sceneScore(i),maximo:scenePts(i),total:totalScore(),totalMax:TOTAL,conceptos:unlocked().size,respuestas:resp,fecha:new Date().toISOString()};
+  S.sent[sc.id]=true; save();
+  try{fetch(ENVIO_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).catch(()=>{S.sent[sc.id]=false;save();});}catch(e){S.sent[sc.id]=false;}
+}
+
+try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}));}catch(e){}
+
+const T=id=>S.T[id]||(S.T[id]={ans:{},done:false,score:0,res:{}});
+function taskDone(t){return !!(S.T[t.id]&&S.T[t.id].done);}
+function sceneDone(i){return SC[i].tasks.every(taskDone);}
+function sceneScore(i){return SC[i].tasks.reduce((s,t)=>s+(S.T[t.id]?S.T[t.id].score:0),0);}
+function scenePts(i){return SC[i].tasks.reduce((s,t)=>s+t.pts,0);}
+function totalScore(){return SC.reduce((s,_,i)=>s+sceneScore(i),0);}
+function unlocked(){const u=new Set();SC.forEach((s,i)=>{if(sceneDone(i))s.learn.forEach(c=>u.add(c));});return u;}
+function maxOpen(){let i=0;while(i<SC.length&&sceneDone(i))i++;return i;} // primera escena sin terminar
+
+/* ================= Utilidades ================= */
+const app=document.getElementById("app"), ov=document.getElementById("ov");
+function esc(t){return String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function top0(){window.scrollTo(0,0);}
+
+/* ================= Maqueta viva ================= */
+function maqueta(){
+  const d=i=>sceneDone(i);
+  let s=`<svg viewBox="0 0 400 270" role="img" aria-label="Tu maqueta de Cabaret">
+  <defs><linearGradient id="cy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0a0e"/><stop offset="1" stop-color="#3a1018"/></linearGradient>
+  <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6cf86" stop-opacity=".55"/><stop offset="1" stop-color="#f6cf86" stop-opacity=".08"/></linearGradient>
+  <pattern id="vel" width="14" height="10" patternUnits="userSpaceOnUse"><rect width="14" height="10" fill="#7a1420"/><rect width="6" height="10" fill="#5a0e18"/></pattern>
+  <radialGradient id="lamp"><stop offset="0" stop-color="#ffb36b" stop-opacity=".85"/><stop offset="1" stop-color="#ffb36b" stop-opacity="0"/></radialGradient>
+  <linearGradient id="cu" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--curtain-2)"/><stop offset=".5" stop-color="var(--curtain)"/><stop offset="1" stop-color="var(--curtain-2)"/></linearGradient></defs>
+  <rect width="400" height="270" fill="#0d0c0b"/>
+  <rect x="30" y="20" width="340" height="200" fill="url(#cy)" opacity="${d(8)?1:.45}"/>
+  <polygon points="20,206 380,206 398,250 2,250" fill="${d(3)?"#0c0a0b":"var(--wood)"}"/>`;
+  if(d(2)){ // el club: terciopelo, escenario, una sola puerta y mesas con público
+    s+=`<rect x="30" y="20" width="340" height="150" fill="url(#vel)"/>
+    <rect x="40" y="96" width="34" height="80" fill="#22070c" stroke="#c9a44a" stroke-width="2"/>
+    <rect x="110" y="150" width="180" height="26" fill="#1a1214"/><line x1="110" y1="150" x2="290" y2="150" stroke="#c9a44a" stroke-width="2"/>`;
+  }
+  if(d(3)) s+=`<text x="200" y="56" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="22" letter-spacing="4" fill="#e8c35a">KIT KAT KLUB</text>
+    <g stroke="#c9a44a" stroke-width="1.5">${Array.from({length:23},(_,k)=>`<line x1="${114+k*8}" y1="176" x2="${114+k*8}" y2="183"/>`).join("")}</g>`;
+  if(d(1)) s+=`<g fill="none" stroke="#c9a44a" stroke-width="2.5" stroke-linecap="round"><path d="M192 150 L194 128 M208 150 L206 128 M190 128 H210 M193 128 Q190 108 200 104 Q210 108 207 128"/></g>`;
+  if(d(2)) [[90,222],[200,226],[310,222]].forEach(([x,y])=>{ s+=`<circle cx="${x}" cy="${y-16}" r="22" fill="url(#lamp)"/><rect x="${x-2}" y="${y-3}" width="4" height="16" fill="#2a2022"/><ellipse cx="${x}" cy="${y-4}" rx="22" ry="6" fill="#2a2022" stroke="#c9a44a" stroke-width="1"/><polygon points="${x-6},${y-10} ${x+6},${y-10} ${x+8},${y-18} ${x-8},${y-18}" fill="#c0283a"/>`; });
+  if(d(4)) s+=`<polygon points="200,6 174,226 226,226" fill="url(#cone)"/><ellipse cx="214" cy="216" rx="5" ry="7" fill="#e8c547"/><path d="M211 210 l3 -8 l3 8 M209 211 l-3 -6 M219 211 l3 -6" stroke="#4d7a32" stroke-width="2" fill="none"/>`;
+  if(d(5)) s+=`<rect x="300" y="176" width="64" height="14" fill="#efe6d6"/><rect x="300" y="166" width="6" height="24" fill="#5a3b24"/><rect x="296" y="190" width="72" height="6" fill="var(--wood-2)"/><circle cx="306" cy="198" r="3.5" fill="#1b1714" stroke="#8b6d4d"/><circle cx="358" cy="198" r="3.5" fill="#1b1714" stroke="#8b6d4d"/>`;
+  if(d(6)){ // figura humana a escala en el escenario del club
+    s+=`<g fill="#f6ece2" opacity=".92"><circle cx="162" cy="96" r="6"/><path d="M156 104 h12 l4 24 h-5 l-2 -11 l-1 33 h-4 l-1 -24 l-1 24 h-4 l-1 -33 l-2 11 h-5z"/></g>
+    <line x1="146" y1="90" x2="146" y2="150" stroke="var(--accent)" stroke-width="1.5"/><line x1="141" y1="90" x2="151" y2="90" stroke="var(--accent)" stroke-width="1.5"/><line x1="141" y1="150" x2="151" y2="150" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="146" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--accent)">1.60 m</text>`;
+  }
+  if(d(9)) s+=`<rect x="30" y="20" width="340" height="230" fill="#9fb8d6" opacity=".16"/><rect x="246" y="236" width="14" height="7" fill="#8a3b2a" stroke="#4a1e15"/>`;
+  if(d(8)) s+=`<rect x="14" y="8" width="372" height="22" fill="url(#cu)"/><rect x="14" y="8" width="20" height="244" fill="url(#cu)"/><rect x="366" y="8" width="20" height="244" fill="url(#cu)"/>`;
+  s+=`<path d="M0 270 V0 H400 V270 H386 V8 H14 V270 Z" fill="var(--frame)"/><rect x="0" y="250" width="400" height="20" fill="var(--wood-2)"/>`;
+  if(!d(0)) s+=`<text x="200" y="140" text-anchor="middle" font-family="Atkinson Hyperlegible, sans-serif" font-size="15" fill="#b3a894">Tu maqueta aparecerá aquí</text>`;
+  return s+`</svg>`;
+}
+function modelPanel(){
+  const items=SC.filter((_,i)=>sceneDone(i)).map(s=>`<li>${esc(s.ficha)}</li>`).join("");
+  return `<aside class="model"><h3>Tu maqueta · Cabaret</h3><div class="box">${maqueta()}</div>
+  ${items?`<ul class="ficha-tec" aria-label="Ficha técnica">${items}</ul>`:""}</aside>`;
+}
+
+/* ================= Barra superior ================= */
+function topbar(){
+  const mo=maxOpen(), u=unlocked().size;
+  const dots=SC.map((s,i)=>`<button style="--c:${BLOCKS[s.b].c}" class="${sceneDone(i)?"done":""} ${S.view==="scene"&&S.cur===i?"cur":""}" ${i<=mo?"":"disabled"} data-scene="${i}" aria-label="Escena ${i+1}: ${esc(s.title)}"></button>`).join("");
+  return `<div class="topbar"><span class="brand">Diez semanas <span>para el estreno</span></span>
+    <div class="steps">${dots}</div>
+    <div class="tb-right"><span class="score"><b>${totalScore()}</b>/${TOTAL}</span><button class="nb" id="nbopen">Cuaderno ${u}/${C_TOTAL}</button></div></div>`;
+}
+
+/* ================= Intro ================= */
+function viewIntro(){
+  app.innerHTML=`<section class="intro">
+    <div>
+      <span class="eyebrow">DVUE · Diseño de escenografía en el teatro</span>
+      <h1>Diez semanas <span>para el estreno</span></h1>
+      <p class="lead">Una compañía va a montar <i>Cabaret</i>, el musical de Kander y Ebb y tú diseñas la escenografía. Recorre el proceso completo, del desglose a la gira, y aprende los conceptos del tema mientras construyes tu maqueta.</p>
+      <ol class="howto">
+        <li><span>01</span><div>En cada escena lees la <b>ficha de conceptos</b>.</div></li>
+        <li><span>02</span><div>Resuelves los <b>retos</b>. Si fallas, te mostramos la respuesta y por qué.</div></li>
+        <li><span>03</span><div>Cada escena terminada suma piezas a tu <b>maqueta</b> y conceptos a tu <b>cuaderno</b>.</div></li>
+      </ol>
+      ${maxOpen()>0?`<p class="brief" style="--c:var(--accent)"><b>Tu avance está guardado.</b> Vas en la escena ${Math.min(maxOpen()+1,SC.length)} de ${SC.length}. Puedes seguir donde te quedaste.</p>`:""}
+      <div class="name"><label for="nm">Tu nombre (aparece en tu boleto del estreno)</label><input id="nm" type="text" autocomplete="name" placeholder="Nombre y apellido" value="${esc(S.name)}"></div>
+      <div class="name" style="margin-top:12px"><label for="cod">Tu código de alumno</label><input id="cod" type="text" inputmode="numeric" placeholder="Ej. 221234567" value="${esc(S.codigo)}"></div>
+      ${ENVIO_URL?`<p class="muted" style="font-size:14px;margin-top:8px">Tus resultados se envían a tu profesora al terminar cada escena.</p>`:""}
+      <div class="go" style="flex-direction:column;align-items:flex-start"><div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn" id="start">${maxOpen()>0?"Continuar":"Empezar el encargo"}</button>${maxOpen()>=SC.length?`<button class="btn ghost" id="toPrem">Ir al estreno</button>`:""}</div>
+        <details style="margin-top:6px;max-width:460px"><summary class="muted" style="cursor:pointer;font-size:15px">¿Vas a cambiar de celular o computadora?</summary>
+          <div style="display:grid;gap:8px;margin-top:10px"><p class="muted" style="font-size:14px">Tu avance se guarda solo en este navegador. Para seguir en otro dispositivo, copia tu código de avance aquí y pégalo allá.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="exp" type="button">Copiar mi código de avance</button><button class="btn ghost" id="imp" type="button">Pegar un código</button></div>
+          <div id="xbox" hidden style="display:grid;gap:8px"><textarea id="xcode" rows="3" style="width:100%;background:var(--stage);border:1px solid var(--line);border-radius:8px;padding:8px;color:var(--fg);font-family:var(--f-mono);font-size:12px"></textarea><span id="xmsg" class="muted" style="font-size:14px"></span><button class="btn" id="xload" type="button" hidden>Cargar código</button></div></div>
+        </details></div>
+    </div>
+    ${modelPanel().replace('class="model"','class="model" style="position:static"')}
+  </section>`;
+  const nm=document.getElementById("nm"); nm.oninput=()=>{S.name=nm.value;save();};
+  const cod=document.getElementById("cod"); cod.oninput=()=>{S.codigo=cod.value;save();};
+  const ex=document.getElementById("exp"), im=document.getElementById("imp");
+  if(ex) ex.onclick=()=>{const box=document.getElementById("xbox");box.hidden=false;const ta=document.getElementById("xcode");ta.value=exportCode();ta.select();try{navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById("xmsg").textContent="Código copiado. Pégalo en el otro dispositivo.";}).catch(()=>{});}catch(e){}};
+  if(im) im.onclick=()=>{const box=document.getElementById("xbox");box.hidden=false;const ta=document.getElementById("xcode");ta.value="";ta.focus();document.getElementById("xmsg").textContent="Pega aquí tu código y toca «Cargar código».";document.getElementById("xload").hidden=false;};
+  const xl=document.getElementById("xload"); if(xl) xl.onclick=()=>{const ok=importCode(document.getElementById("xcode").value);if(ok){render();top0();}else document.getElementById("xmsg").textContent="Ese código no es válido. Cópialo completo e inténtalo otra vez.";};
+  document.getElementById("start").onclick=()=>{S.cur=Math.min(maxOpen(),SC.length-1);S.view=maxOpen()>=SC.length?"premiere":"scene";render();top0();};
+  const tp=document.getElementById("toPrem"); if(tp) tp.onclick=()=>{S.view="premiere";render();top0();};
+}
+
+/* ================= Retos ================= */
+function renderTask(t,i){
+  const st=T(t.id), done=st.done;
+  let body="";
+  if(t.type==="mc"){
+    const ord=S.ord[t.id];
+    body=`<div class="opts">${ord.map(k=>{let c="opt";if(done){if(k===t.a)c+=" right";else if(k===st.ans.v)c+=" wrong";}
+      return `<button class="${c}" data-mc="${t.id}" data-k="${k}" ${done?"disabled":""}>${esc(t.o[k])}</button>`;}).join("")}</div>`;
+    if(done) body+=fb(st.score===1,t.e);
+  }
+  else if(t.type==="multi"){
+    const sel=st.ans.sel||[];
+    body=`<div class="chips">${t.o.map((o,k)=>{let c="chipb"+(sel.includes(k)?" sel":"");if(done){if(t.a.includes(k))c+=" right";else if(sel.includes(k))c+=" wrong";}
+      return `<button class="${c}" data-mu="${t.id}" data-k="${k}" ${done?"disabled":""} aria-pressed="${sel.includes(k)}">${esc(o)}</button>`;}).join("")}</div>`;
+    body+= done?fb(st.score===1,t.e):`<div class="row-actions"><span class="counter">${sel.length}/${t.a.length} elegidos</span><button class="btn" data-check="${t.id}" ${sel.length===t.a.length?"":"disabled"}>Comprobar</button></div>`;
+  }
+  else if(t.type==="match"){
+    const ord=S.ord[t.id]||t.items.map((_,k)=>k);
+    const rows=ord.map(k=>{const it=t.items[k], opts=it.opts||t.opts, v=st.ans[k];
+      const cls=done?(v===it.a?"right":"wrong"):"";
+      let ctrl;
+      if(opts.length<=6){ctrl=`<div class="chips">${opts.map(o=>`<button class="chipb ${v===o?"sel":""}" data-ma="${t.id}" data-i="${k}" data-v="${esc(o)}" ${done?"disabled":""} aria-pressed="${v===o}">${esc(o)}</button>`).join("")}</div>`;}
+      else{ctrl=`<select data-ms="${t.id}" data-i="${k}" ${done?"disabled":""} aria-label="${esc(it.t)}"><option value="">Elige…</option>${opts.map(o=>`<option ${v===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`;}
+      const lead=t.svg?`<span class="num-badge">${esc(it.t)}</span>`:(it.sw?`<span class="sw" style="background:${it.sw}"></span>`:"");
+      const label=t.svg?"":esc(it.t);
+      const fix=done?`<div class="fix">${v===it.a?"":`Correcto: <b>${esc(it.a)}</b>. `}${it.e?esc(it.e):""}</div>`:"";
+      return `<div class="mrow ${cls}"><div class="it">${lead}${label}</div>${ctrl}${(done&&(v!==it.a||it.e))?fix:""}</div>`;}).join("");
+    const filled=t.items.filter((_,k)=>st.ans[k]).length;
+    body=(t.svg?`<div class="svgbox">${stageSVG()}</div>`:"")+`<div class="opts" ${t.svg?'style="grid-template-columns:repeat(auto-fill,minmax(210px,1fr))"':""}>${rows}</div>`;
+    body+= done?fb(st.score===t.items.length,`${st.score} de ${t.items.length} correctas.`,true)
+      :`<div class="row-actions"><span class="counter">${filled}/${t.items.length}</span><button class="btn" data-check="${t.id}" ${filled===t.items.length?"":"disabled"}>Comprobar</button></div>`;
+  }
+  else if(t.type==="num"){
+    body=`<div class="formula">${t.formula.map(f=>`<span>${esc(f)}</span>`).join("")}</div>`+t.items.map((it,k)=>{
+      const r=st.res[k]||{}; const solved=r.ok||r.shown;
+      return `<div class="mrow ${r.ok?"right":(r.shown?"wrong":"")}"><div class="it" style="font-weight:400">${k+1}. ${esc(it.q)}</div>
+      <div class="inrow"><input id="n-${t.id}-${k}" inputmode="decimal" value="${esc(r.v||"")}" ${solved?"disabled":""} aria-label="Respuesta ${k+1}"><span class="unit">${it.u}</span>${solved?"":`<button class="btn" data-num="${t.id}" data-i="${k}">Comprobar</button>`}</div>
+      ${r.ok?`<div class="fix"><b>${r.tries===1?"¡Exacto!":"Ahora sí."}</b> ${esc(it.e)}</div>`:r.shown?`<div class="fix">Era <b>${it.a} ${it.u}</b>. ${esc(it.e)}</div>`:r.tries?`<div class="fix" style="color:var(--bad)">Revisa: ¿pasaste los metros a centímetros? Intenta otra vez.</div>`:""}</div>`;}).join("");
+  }
+  return `<div class="task" id="task-${t.id}"><span class="tag">Reto ${i+1} de ${SC[S.cur].tasks.length}</span><p class="q">${esc(t.q)}</p>${t.hint?`<p class="hint">${esc(t.hint)}</p>`:""}${body}</div>`;
+}
+function fb(ok,text,match){return `<div class="fb ${ok?"":"no"}" role="status"><b>${ok?"¡Bien!":match?"Revisa las correcciones.":"No exactamente."}</b>${esc(text)}</div>`;}
+
+/* ================= Escena ================= */
+function viewScene(){
+  const i=S.cur, s=SC[i], c=BLOCKS[s.b].c, read=!!S.read[s.id], done=sceneDone(i);
+  const cards=s.learn.map(id=>`<div class="cc" style="--c:${BLOCKS[C[id].b].c}"><h4>${esc(C[id].t)}</h4><p>${esc(C[id].d)}</p></div>`).join("")+
+    (s.spectrum?`<div class="spectrum"><span>← Imita un lugar</span><span>Transmite una idea →</span></div>`:"");
+  let tasksHtml="";
+  if(read){ for(let k=0;k<s.tasks.length;k++){ tasksHtml+=renderTask(s.tasks[k],k); if(!taskDone(s.tasks[k])) break; } }
+  const next=i+1<SC.length;
+  const unlock=done?`<div class="unlock" style="--c:${c}"><span class="eyebrow" style="color:${c}">Escena completa · ${sceneScore(i)}/${scenePts(i)}</span>
+     <h3>Nuevo en tu cuaderno</h3><div class="chips">${s.learn.map(id=>`<span>${esc(C[id].t)}</span>`).join("")}</div>
+     <div class="row-actions">${next?`<button class="btn" id="nextScene">Siguiente: ${esc(SC[i+1].title)}</button>`:`<button class="btn" id="goPrem">¡Al estreno!</button>`}</div></div>`:"";
+  app.innerHTML=topbar()+`<div class="shop">${modelPanel()}<main style="--c:${c};min-width:0">
+    <header class="scene-head"><span class="eyebrow">Escena ${i+1} · ${esc(s.week)} · ${esc(BLOCKS[s.b].n)}</span><h2>${esc(s.title)}</h2><p>${esc(s.sub)}</p></header>
+    <div class="brief">${s.brief}</div>
+    <div class="sec-label">Ficha de conceptos</div>
+    <div class="cards">${cards}</div>
+    ${read?`<div class="sec-label">Retos</div>${tasksHtml}${unlock}`:`<div class="readbtn"><button class="btn" id="readOk">Ya lo leí: a los retos</button></div>`}
+  </main></div>`;
+  bindScene();
+}
+
+function bindScene(){
+  const s=SC[S.cur];
+  const find=id=>s.tasks.find(t=>t.id===id);
+  const ro=document.getElementById("readOk"); if(ro) ro.onclick=()=>{S.read[s.id]=true;render();const el=document.querySelector(".task");if(el)el.scrollIntoView({block:"start",behavior:"smooth"});};
+  app.querySelectorAll("[data-mc]").forEach(b=>b.onclick=()=>{const t=find(b.dataset.mc),st=T(t.id);st.ans.v=Number(b.dataset.k);st.score=st.ans.v===t.a?1:0;st.done=true;afterTask(t);});
+  app.querySelectorAll("[data-mu]").forEach(b=>b.onclick=()=>{const t=find(b.dataset.mu),st=T(t.id),k=Number(b.dataset.k);st.ans.sel=st.ans.sel||[];const p=st.ans.sel.indexOf(k);if(p>=0)st.ans.sel.splice(p,1);else if(st.ans.sel.length<t.a.length)st.ans.sel.push(k);keep(()=>render(),b);});
+  app.querySelectorAll("[data-ma]").forEach(b=>b.onclick=()=>{const st=T(b.dataset.ma);st.ans[b.dataset.i]=b.dataset.v;keep(()=>render(),b);});
+  app.querySelectorAll("[data-ms]").forEach(sel=>sel.onchange=()=>{const st=T(sel.dataset.ms);st.ans[sel.dataset.i]=sel.value;keep(()=>render(),sel);});
+  app.querySelectorAll("[data-check]").forEach(b=>b.onclick=()=>{const t=find(b.dataset.check),st=T(t.id);
+    if(t.type==="multi"){const sel=(st.ans.sel||[]).slice().sort().join(),a=t.a.slice().sort().join();st.score=sel===a?1:0;}
+    else st.score=t.items.reduce((n,it,k)=>n+(st.ans[k]===it.a?1:0),0);
+    st.done=true;afterTask(t);});
+  app.querySelectorAll("input[id^=n-]").forEach(inp=>{inp.onkeydown=e=>{if(e.key==="Enter"){const b=inp.parentElement.querySelector("[data-num]");if(b)b.click();}};});
+  app.querySelectorAll("[data-num]").forEach(b=>b.onclick=()=>{const t=find(b.dataset.num),st=T(t.id),k=Number(b.dataset.i),it=t.items[k];
+    const inp=document.getElementById(`n-${t.id}-${k}`);const v=parseFloat(String(inp.value).replace(",",".").replace(/[^\d.\-]/g,""));if(isNaN(v))return;
+    const r=st.res[k]||(st.res[k]={tries:0});r.tries++;r.v=inp.value;
+    if(Math.abs(v-it.a)<0.051){r.ok=true;if(r.tries===1)st.score++;}else if(r.tries>=2){r.shown=true;}
+    if(t.items.every((_,j)=>st.res[j]&&(st.res[j].ok||st.res[j].shown))){st.done=true;afterTask(t);return;}
+    keep(()=>render(),b);const nx=document.getElementById(`n-${t.id}-${k+1}`);if(r.ok&&nx)nx.focus({preventScroll:true});});
+  const ns=document.getElementById("nextScene"); if(ns) ns.onclick=()=>{S.cur++;render();top0();};
+  const gp=document.getElementById("goPrem"); if(gp) gp.onclick=()=>{S.view="premiere";render();top0();};
+}
+/* mantiene la posición de scroll al re-renderizar */
+function keep(fn,el){const id=el&&el.closest(".task")?el.closest(".task").id:null;const y=id?document.getElementById(id).getBoundingClientRect().top:0;fn();if(id){const n=document.getElementById(id);if(n)window.scrollBy(0,n.getBoundingClientRect().top-y);}}
+function afterTask(t){
+  const id="task-"+t.id; const y=document.getElementById(id).getBoundingClientRect().top;
+  render();
+  const n=document.getElementById(id); if(n) window.scrollBy(0,n.getBoundingClientRect().top-y);
+}
+
+/* ================= Teatro a la italiana (reto 9) ================= */
+function stageSVG(){
+  const m=(n,x,y)=>`<g><circle cx="${x}" cy="${y}" r="25" fill="var(--accent)" stroke="var(--bg)" stroke-width="3"/><text x="${x}" y="${y+8}" text-anchor="middle" font-family="Atkinson Hyperlegible, sans-serif" font-weight="700" font-size="24" fill="var(--accent-ink)">${n}</text></g>`;
+  return `<svg viewBox="0 0 800 520" role="img" aria-label="Vista frontal de un teatro a la italiana con nueve partes numeradas">
+  <defs><linearGradient id="cyc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#274565"/><stop offset=".65" stop-color="#6d6b86"/><stop offset="1" stop-color="#d9a25a"/></linearGradient>
+  <linearGradient id="cur" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--curtain-2)"/><stop offset=".5" stop-color="var(--curtain)"/><stop offset="1" stop-color="var(--curtain-2)"/></linearGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c77a" stop-opacity=".35"/><stop offset="1" stop-color="#f3c77a" stop-opacity="0"/></linearGradient></defs>
+  <rect width="800" height="520" fill="var(--stage)"/>
+  <rect x="22" y="80" width="93" height="300" fill="none" stroke="var(--faint)" stroke-width="2" stroke-dasharray="7 6"/>
+  <rect x="685" y="80" width="93" height="300" fill="none" stroke="var(--faint)" stroke-width="2" stroke-dasharray="7 6"/>
+  <rect x="170" y="80" width="460" height="300" fill="#0d0c0b"/><rect x="215" y="112" width="370" height="250" fill="url(#cyc)"/>
+  <polygon points="275,158 245,360 325,360 295,158" fill="url(#beam)"/><polygon points="515,158 475,360 555,360 535,158" fill="url(#beam)"/>
+  <line x1="222" y1="150" x2="578" y2="150" stroke="#a79e90" stroke-width="6" stroke-linecap="round"/>
+  <g fill="#3b3631" stroke="#a79e90" stroke-width="1.5"><rect x="277" y="152" width="16" height="14" rx="2"/><rect x="347" y="152" width="16" height="14" rx="2"/><rect x="437" y="152" width="16" height="14" rx="2"/><rect x="517" y="152" width="16" height="14" rx="2"/></g>
+  <rect x="170" y="360" width="460" height="40" fill="var(--wood)"/><rect x="360" y="372" width="80" height="10" fill="none" stroke="#c9b08a" stroke-width="2"/>
+  <rect x="170" y="80" width="40" height="300" fill="url(#cur)"/><rect x="210" y="110" width="24" height="270" fill="url(#cur)" opacity=".85"/>
+  <rect x="590" y="80" width="40" height="300" fill="url(#cur)"/><rect x="566" y="110" width="24" height="270" fill="url(#cur)" opacity=".85"/>
+  <rect x="170" y="80" width="460" height="30" fill="url(#cur)"/><rect x="210" y="110" width="380" height="18" fill="var(--curtain-2)"/>
+  <path d="M118 400 V38 H682 V400 H630 V80 H170 V400 Z" fill="var(--frame)" stroke="#c7a36a" stroke-width="2"/>
+  <polygon points="96,400 704,400 672,442 128,442" fill="var(--wood-2)" stroke="#8b6d4d" stroke-width="2"/>
+  <rect x="250" y="450" width="300" height="60" fill="#0b0a09" stroke="var(--faint)" stroke-width="2" stroke-dasharray="7 6"/>
+  <line x1="400" y1="384" x2="400" y2="470" stroke="#c9b08a" stroke-width="2" stroke-dasharray="4 5"/><polygon points="392,462 408,462 400,476" fill="#c9b08a"/>
+  <line x1="690" y1="26" x2="782" y2="26" stroke="#a79e90" stroke-width="5"/>
+  <circle cx="712" cy="34" r="9" fill="none" stroke="#a79e90" stroke-width="3"/><circle cx="758" cy="34" r="9" fill="none" stroke="#a79e90" stroke-width="3"/>
+  <line x1="712" y1="43" x2="712" y2="330" stroke="#c9b08a" stroke-width="2"/><line x1="758" y1="43" x2="758" y2="262" stroke="#c9b08a" stroke-width="2"/>
+  <rect x="746" y="262" width="24" height="58" fill="#5a5148" stroke="#a79e90" stroke-width="2"/><rect x="700" y="330" width="26" height="12" fill="#5a5148" stroke="#a79e90" stroke-width="2"/>
+  ${m(1,400,150)}${m(2,735,200)}${m(3,330,95)}${m(4,190,245)}${m(5,580,59)}${m(6,400,262)}${m(7,68,230)}${m(8,400,422)}${m(9,470,482)}</svg>`;
+}
+
+/* ================= Estreno ================= */
+/* ================= Evidencia descargable (PNG) ================= */
+function svgForImage(svg){
+  const cs=getComputedStyle(document.documentElement);
+  return svg.replace(/var\((--[\w-]+)\)/g,(m,n)=>cs.getPropertyValue(n).trim()||"#000")
+            .replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="810" ');
+}
+function loadImg(src){return new Promise((ok,ko)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=ko;im.src=src;});}
+async function buildEvidence(){
+  try{ if(document.fonts&&document.fonts.ready) await document.fonts.ready; }catch(e){}
+  const W=1080,H=1680,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
+  const cs=getComputedStyle(document.documentElement), v=n=>cs.getPropertyValue(n).trim();
+  const DISP='"Big Shoulders Display","Arial Narrow",Impact,sans-serif', BODY='"Atkinson Hyperlegible",Arial,sans-serif', MONO='"IBM Plex Mono",Menlo,monospace';
+  // fondo
+  g.fillStyle=v("--bg");g.fillRect(0,0,W,H);
+  let gr=g.createRadialGradient(W,0,0,W,0,700);gr.addColorStop(0,"rgba(220,40,60,.30)");gr.addColorStop(1,"rgba(220,40,60,0)");g.fillStyle=gr;g.fillRect(0,0,W,H);
+  gr=g.createRadialGradient(0,H,0,0,H,800);gr.addColorStop(0,"rgba(226,181,74,.16)");gr.addColorStop(1,"rgba(226,181,74,0)");g.fillStyle=gr;g.fillRect(0,0,W,H);
+  g.fillStyle="rgba(255,220,200,.03)";for(let x=0;x<W;x+=32){g.fillRect(x,0,14,H);}
+  // encabezado
+  g.fillStyle=v("--accent");g.font=`700 24px ${BODY}`;g.fillText("DVUE · DISEÑO DE ESCENOGRAFÍA EN EL TEATRO",60,82);
+  g.fillStyle=v("--fg");let fs=74;g.font=`800 ${fs}px ${DISP}`;while(g.measureText("DIEZ SEMANAS PARA EL ESTRENO").width>W-120&&fs>30){fs-=2;g.font=`800 ${fs}px ${DISP}`;}g.fillText("DIEZ SEMANAS PARA EL ESTRENO",60,162);
+  g.fillStyle=v("--muted");g.font=`400 30px ${BODY}`;g.fillText("Mi escenografía para Cabaret",60,208);
+  const lg=g.createLinearGradient(60,0,W-60,0);["--red","--gold","--red"].forEach((k,i)=>lg.addColorStop(i/2,v(k)));g.fillStyle=lg;g.fillRect(60,232,W-120,4);
+  // maqueta
+  const im=await loadImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svgForImage(maqueta())));
+  g.drawImage(im,60,262,960,648);
+  // datos del alumno
+  let y=970; const d=new Date();
+  g.fillStyle=v("--fg");g.font=`700 40px ${BODY}`;g.fillText(S.name.trim()||"Sin nombre",60,y);
+  g.fillStyle=v("--muted");g.font=`400 26px ${MONO}`;
+  g.fillText(`Código: ${S.codigo.trim()||"—"}   ·   ${d.toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})}`,60,y+42);
+  // tabla de escenas
+  y+=96; g.font=`400 25px ${BODY}`;
+  SC.forEach((s,i)=>{
+    const done=sceneDone(i);
+    g.fillStyle=done?v("--fg"):v("--faint");g.textAlign="left";g.fillText(`${i+1}. ${s.title}${done?"":" (pendiente)"}`,60,y);
+    g.textAlign="right";g.font=`500 25px ${MONO}`;g.fillText(`${sceneScore(i)}/${scenePts(i)}`,W-60,y);g.font=`400 25px ${BODY}`;
+    g.strokeStyle=v("--line");g.beginPath();g.moveTo(60,y+12);g.lineTo(W-60,y+12);g.stroke();y+=40;
+  });
+  g.textAlign="left";y+=14;
+  const t=totalScore();
+  g.fillStyle=v("--accent");g.font=`800 46px ${DISP}`;g.fillText(`TOTAL ${t}/${TOTAL} · ${Math.round(t/TOTAL*100)}%`,60,y+20);
+  g.fillStyle=v("--muted");g.font=`400 26px ${BODY}`;g.fillText(`Conceptos en el cuaderno: ${unlocked().size}/${C_TOTAL}`,60,y+62);
+  if(maxOpen()>=SC.length){g.save();g.font=`800 32px ${DISP}`;const sw=g.measureText("FUNCIÓN COMPLETA").width+40;g.translate(W-60-sw/2,y+150);g.rotate(-0.06);g.strokeStyle=v("--gold");g.lineWidth=4;g.strokeRect(-sw/2,-42,sw,60);g.fillStyle=v("--gold");g.textAlign="center";g.fillText("FUNCIÓN COMPLETA",0,0);g.restore();}
+  g.fillStyle=v("--faint");g.font=`400 20px ${MONO}`;g.fillText(`Generado: ${d.toLocaleString("es-MX")}`,60,H-40);
+  return await new Promise(r=>c.toBlob(r,"image/png"));
+}
+function fileName(){const n=(S.name.trim()||"alumno").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"");return `Cabaret_escenografia_${n}${S.codigo.trim()?"_"+S.codigo.trim().replace(/[^\w]/g,""):""}.png`;}
+async function downloadEvidence(btn,msg){
+  btn.disabled=true;msg.textContent="Preparando tu imagen…";
+  try{
+    const blob=await buildEvidence(), name=fileName();
+    let dl=null; try{ if(window.claude&&window.claude.use) dl=await window.claude.use("downloads"); }catch(e){}
+    if(dl){ try{ await dl.save({filename:name,data:blob}); msg.textContent="Listo. Súbela a la tarea."; }catch(e){ msg.textContent=e&&e.code==="declined"?"Descarga cancelada.":"No se pudo descargar aquí. Abre la actividad desde Moodle."; } }
+    else{ const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);msg.textContent=`Se descargó «${name}». Súbela a la tarea.`; }
+  }catch(e){ msg.textContent="No se pudo crear la imagen. Toma captura de pantalla de tu boleto."; }
+  btn.disabled=false;
+}
+
+function viewPremiere(){
+  const d=new Date().toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"});
+  const t=totalScore(), pct=Math.round(t/TOTAL*100), u=unlocked().size, all=maxOpen()>=SC.length;
+  const rows=SC.map((s,i)=>`<tr><td>${i+1}. ${esc(s.title)}${sceneDone(i)?"":" <em style='color:#9e1b2a'>(pendiente)</em>"}</td><td>${sceneScore(i)}/${scenePts(i)}</td></tr>`).join("");
+  app.innerHTML=topbar()+`<section class="premiere">
+    <div><span class="eyebrow">Noche de estreno</span><h2 style="font-size:clamp(44px,8vw,80px);text-transform:uppercase;margin-top:6px">Se abre el telón</h2></div>
+    <div class="theatre" id="th">${maqueta()}<div class="cl"></div><div class="cr"></div></div>
+    <blockquote>«La verdadera escenografía es lo que sucede cuando se abre el telón.»<cite>Josef Svoboda</cite></blockquote>
+    <section class="ticket" aria-label="Boleto del estreno">
+      <span class="eyebrow">DVUE · Cabaret · Escenografía</span>
+      <h2>Boleto de salida</h2>
+      <div class="who"><b>${esc(S.name.trim()||"Sin nombre")}${S.codigo.trim()?" · "+esc(S.codigo.trim()):""}</b><span>${d}</span></div>
+      <table>${rows}<tr class="total"><td>Total</td><td>${t}/${TOTAL} · ${pct}%</td></tr><tr><td>Conceptos en el cuaderno</td><td>${u}/${C_TOTAL}</td></tr></table>
+      ${all?`<span class="stamp">Función completa</span>`:""}
+    </section>
+    <div class="row-actions" style="justify-content:flex-start">
+      ${S.name.trim()?"":`<span class="muted" style="font-size:15px">Escribe tu nombre en la portada para que aparezca en tu boleto.</span>`}
+      <button class="btn" id="dlEv">Descargar mi evidencia (PNG)</button><button class="btn ghost" id="nb2">Repasar mi cuaderno</button><button class="btn ghost" id="home">Portada</button><button class="btn ghost" id="reset">Empezar de nuevo</button>
+    </div>
+    <p id="rq" class="muted" hidden>¿Seguro? Se borran tus respuestas. <button class="btn ghost" id="resetYes" style="padding:6px 12px">Sí, borrar</button></p>
+    <p class="muted" id="dlMsg" style="font-size:15px" role="status">Descarga tu evidencia y súbela a la tarea. Incluye tu maqueta, tu nombre, tu código y tu puntaje.</p>
+  </section>`;
+  requestAnimationFrame(()=>setTimeout(()=>{const th=document.getElementById("th");if(th)th.classList.add("open");},60));
+  document.getElementById("nb2").onclick=()=>{S.nb=true;renderNB();};
+  document.getElementById("dlEv").onclick=e=>downloadEvidence(e.currentTarget,document.getElementById("dlMsg"));
+  document.getElementById("home").onclick=()=>{S.view="intro";render();top0();};
+  document.getElementById("reset").onclick=()=>{document.getElementById("rq").hidden=false;};
+  document.getElementById("resetYes").onclick=()=>{const n=S.name,c=S.codigo;S=fresh();S.name=n;S.codigo=c;save();render();top0();};
+}
+
+/* ================= Cuaderno ================= */
+function renderNB(){
+  if(!S.nb){ov.innerHTML="";return;}
+  const u=unlocked();
+  const groups=[1,2,3,4,5].map(b=>{const ids=Object.keys(C).filter(id=>C[id].b===b);
+    return `<div class="nb-group" style="--c:${BLOCKS[b].c}"><h3>${esc(BLOCKS[b].n)}</h3><div class="nb-list">${ids.map(id=>u.has(id)?`<div class="nb-item"><b>${esc(C[id].t)}</b>${esc(C[id].d)}</div>`:`<div class="nb-item locked">Por descubrir</div>`).join("")}</div></div>`;}).join("");
+  ov.innerHTML=`<div class="overlay" id="ovbg"><div class="drawer" role="dialog" aria-modal="true" aria-label="Cuaderno del escenógrafo">
+    <header><div><span class="eyebrow">${u.size} de ${C_TOTAL} conceptos</span><h2>Mi cuaderno</h2></div><button class="btn ghost" id="nbclose">Cerrar</button></header>
+    <p class="muted" style="font-size:15px">Los conceptos se agregan al terminar cada escena. Úsalo para estudiar antes del examen.</p>${groups}</div></div>`;
+  document.getElementById("nbclose").onclick=()=>{S.nb=false;renderNB();};
+  document.getElementById("ovbg").onclick=e=>{if(e.target.id==="ovbg"){S.nb=false;renderNB();}};
+  document.getElementById("nbclose").focus();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.nb){S.nb=false;renderNB();}});
+
+function render(){
+  save(); SC.forEach((sc,i)=>{if(sceneDone(i)&&!S.sent[sc.id])sendScene(i);});
+  if(S.view==="intro") viewIntro(); else if(S.view==="premiere") viewPremiere(); else viewScene();
+  const nb=document.getElementById("nbopen"); if(nb) nb.onclick=()=>{S.nb=true;renderNB();};
+  app.querySelectorAll("[data-scene]").forEach(b=>b.onclick=()=>{S.cur=Number(b.dataset.scene);S.view="scene";render();top0();});
+  const br=app.querySelector(".brand"); if(br){br.style.cursor="pointer";br.onclick=()=>{S.view="intro";render();top0();};}
+  renderNB();
+}
+render();
+})();
+</script>
